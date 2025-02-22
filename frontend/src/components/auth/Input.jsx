@@ -23,30 +23,83 @@
 // }
 
 //  otra manera de hacerlo
-const Input = ({config}) => {
+// const Input = ({config}) => {
+
+//     if (config.type === "email") {
+    
+//         return (
+
+//         <>
+        
+//             <label htmlFor={config.id} className="form-label">
+//                     {config.placeholder}
+//             </label>
+//             <input
+//                 type={config.type}
+//                 className={"form-control "+config.className}
+//                 id={config.id}
+//                 placeholder={config.placeholder}
+//                 onChange={config.change}
+//             />
+        
+        
+//         </>
+
+//         )
+//     }
+//     else if (config.type === "password") {
+
+//         return (   
+
+//             <>
+        
+//                 <label htmlFor={config.id} className="form-label">
+//                     {config.placeholder}
+//                 </label>
+//                 <input
+//                     type={config.type}
+//                     className={"form-control bg-dark "+config.className}
+//                     id={config.id}
+//                     placeholder={config.placeholder}
+//                     onChange={config.change}
+//                 />
+        
+        
+//             </>
+
+//         )
+
+//     }
+
+// }
+
+const Input = ({
+    type,
+    id,
+    placeholder,
+    className = '',
+    onChange,
+}) => {
 
     return (
-
         <>
-        
-            <label htmlFor={config.id} className="form-label">
-                    {config.placeholder}
-            </label>
-                <input
-                    type={config.type}
-                    className={config.className}
-                    id={config.id}
-                    placeholder={config.placeholder}
-                    onChange={config.change}
+            {placeholder && (
+                <label htmlFor={id} className="form-label">
+                    {placeholder}
+                </label>
+            )}
+            <input
+                type={type}
+                id={id}
+                className={`form-control ${type === 'password' ? 'bg-dark text-white' : ''} ${className}`}
+                placeholder={placeholder}
+                onChange={onChange}
+
             />
-        
-        
         </>
+    );
 
+};
 
-
-
-    )
-}
 
 export default Input

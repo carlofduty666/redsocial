@@ -42,37 +42,23 @@ const Login = () => {
                     <form action="" onSubmit={loginFunction}>
                         <div className="mb-3">
                             <Input
-                                // type="email"
-                                // id="email"
-                                // placeholder="Email"
-                                // change={(e) => {setEmail(e.target.value)}}
-                                config={{
-                                    type: 'email',
-                                    id: 'email',
-                                    placeholder: 'Email',
-                                    className: 'form-control',
-                                    change: (e) => {setEmail(e.target.value)}
-                                }}
+                                type="email"
+                                id="email"
+                                placeholder="Email"
+                                change={(e) => {setEmail(e.target.value)}}
                             
                             />
-                            {/* <label htmlFor="password" className="form-label">Email address</label>
-                            <input 
-                                type="email"
-                                className="form-control"
-                                id="email"
-                                placeholder="name@example.com"
-                                onChange={(e) => {setEmail(e.target.value)}}
-                            /> */}
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Example textarea</label>
-                            <input 
-                                type="password" 
-                                className="form-control"
-                                id="password" 
-                                placeholder="Password"
-                                onChange={(e) => {setPassword(e.target.value)}}
+                            <label htmlFor="password" className="form-label"></label>
+                            <Input 
+                                type='password'
+                                id='password'
+                                className='bg-dark text-white'
+                                placeholder='Password'
+                                onChange={(e) => setPassword(e.target.value)}
                             />
+
                         </div>
 
                         <Button text="Login" color="warning"></Button>
