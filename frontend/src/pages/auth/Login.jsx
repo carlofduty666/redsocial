@@ -42,10 +42,17 @@ const Login = () => {
                     <form action="" onSubmit={loginFunction}>
                         <div className="mb-3">
                             <Input
-                                type="email"
-                                id="email"
-                                placeholder="Email"
-                                change={(e) => {setEmail(e.target.value)}}
+                                // type="email"
+                                // id="email"
+                                // placeholder="Email"
+                                // change={(e) => {setEmail(e.target.value)}}
+                                config={{
+                                    type: 'email',
+                                    id: 'email',
+                                    placeholder: 'Email',
+                                    className: 'form-control',
+                                    change: (e) => {setEmail(e.target.value)}
+                                }}
                             
                             />
                             {/* <label htmlFor="password" className="form-label">Email address</label>
