@@ -13,10 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
+    static async getAllUsers() {
+      return await User.findAll();
+    }
+
     static async createUser(userData) {
       return await User.create({
         username: userData.username,
-        password: userData.password
+        password: userData.password,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phone: userData.phone,
+        address: userData.address
       });
     }
 

@@ -12,7 +12,7 @@ const Login = () => {
         e.preventDefault();
 
         console.log(email, password)
-        fetch('http://localhost:5173/auth/login', {
+        fetch('http://localhost:5556/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

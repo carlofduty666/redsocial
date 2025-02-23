@@ -14,7 +14,7 @@ const Register = () => {
         e.preventDefault();
 
         console.log(email, password)
-        fetch('http://localhost:5173/auth/register', {
+        fetch('http://localhost:5556/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -134,10 +134,16 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Base route
 app.get('/', (req, res) => {
     res.json({ message: 'API funcionando correctamente' });
 });
+
+
+const userController = require('./controllers/user');
+app.use('/users', userController);
+
 
 // Database initialization
 const sequelize = new Sequelize(
@@ -159,17 +165,14 @@ User.hasOne(Profile);
 Profile.belongsTo(User);
 
 // Routes
-app.use('/users', require('./controllers/user'));
 
 // Database sync
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     console.log('Database & tables created!');
 }).catch((error) => {
     console.error('Error creating database:', error);
 });
 
-const userRoutes = require('./controllers/user')
-app.use('api/users', userRoutes);
 
 // Server start
 app.listen(port, () => {

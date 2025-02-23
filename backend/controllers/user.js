@@ -1,8 +1,70 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+// estas 4 constantes inviolablemente debe estar en todo controlador
+const { Sequelize, DataTypes } = require('sequelize');
+const dbconfig = require('../config/config.json').development;
+
+const sequelize = new Sequelize(
+    dbconfig.database,
+    dbconfig.username,
+    dbconfig.password, 
+    {
+        host: dbconfig.host,
+        dialect: dbconfig.dialect
+    }
+);
+
+// esta constante no puede ir antes de la constante sequelize
+const User = require('../models/user')(sequelize, DataTypes);
+
+// router.get('/', async (request, response) => {
+//   try {
+//     const users = await User.getAllUsers(); // Usa aquí el método getAllUsers()
+//     response.status(200).json(users);
+//   } catch (error) {
+//     console.log('Error al obtener usuarios:', error);
+//     response.status(500).send('Error al obtener usuarios');
+//   }
+// });
+
+router.get('/', async (request, response) => {
+    try {
+        const users = await User.findAll(); // se puede usar el metodo getAllUsers() o el predeterminado de Sequelize: findAll()
+        response.status(200).json(users);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        response.status(500).send('Error al obtener usuarios');
+    }
+});
+
+router.post('/', async (request, response) => {
+    const { username, password, email, firstName, lastName, phone, address } = request.body;
+    try {
+        const nuevoUsuario = await User.create({ username, password, email, firstName, lastName, phone, address }); // create() es un metodo de sequelize que crea un nuevo registro en la base de datos
+        response.status(201).json({ message: 'Usuario creado exitosamente' });
+    } catch (error) {
+        console.error('Error al crear usuario:', error);
+        response.status(500).send('Error al crear usuario');
+    }
+})
+
+router.delete('/', async (request, response) => {
+    const { id } = request.body;
+    try {
+        const usuarioEliminado = await User.destroy({ where: { id } });
+        if (usuarioEliminado) {
+            response.status(200).json({ message: 'Usuario eliminado exitosamente' });
+        } else {
+            response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error);
+        response.status(500).send('Error al eliminar usuario');
+    }
+})
 
 router.post('/login', async (request, response) => {
     const { username, password } = request.body;
