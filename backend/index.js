@@ -22,7 +22,7 @@ app.use(cors());
 app.use((req, res, next) => {
     if (req.cookies && req.cookies.token) {
         try {
-            const decoded = jwt.verify(req.cookies.token, '123456');
+            const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
             req.user = decoded;
         } catch (err) {
             console.error('Error de autenticación:', err);

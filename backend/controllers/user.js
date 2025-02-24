@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const authenticateToken = require('../middleware/auth'); 
 
 // estas 4 constantes inviolablemente debe estar en todo controlador
 const { Sequelize, DataTypes } = require('sequelize');
@@ -20,7 +21,7 @@ const sequelize = new Sequelize(
 // esta constante no puede ir antes de la constante sequelize
 const User = require('../models/user')(sequelize, DataTypes);
 
-router.get('/', async (request, response) => {
+router.get('/', authenticateToken, async (request, response) => {
     try {
         const users = await User.findAll(); // se puede usar el metodo getAllUsers() o el predeterminado de Sequelize: findAll()
         response.status(200).json(users);
@@ -30,7 +31,7 @@ router.get('/', async (request, response) => {
     }
 });
 
-router.post('/', async (request, response) => {
+router.post('/', authenticateToken, async (request, response) => {
     const { username, password, email, firstName, lastName, phone, address } = request.body;
     try {
         const nuevoUsuario = await User.create({ username, password, email, firstName, lastName, phone, address }); // create() es un metodo de sequelize que crea un nuevo registro en la base de datos
@@ -41,7 +42,7 @@ router.post('/', async (request, response) => {
     }
 })
 
-router.delete('/', async (request, response) => {
+router.delete('/', authenticateToken, async (request, response) => {
     const { id } = request.body;
     try {
         const usuarioEliminado = await User.destroy({ where: { id } });
@@ -77,20 +78,24 @@ router.post('/login', async (request, response) => {
     try {
         const user = await User.loginUser(email);
         if (!user) {
-            return response.status(401).send('Invalid e-mail');
+            // Asegúrate de que la respuesta sea JSON
+            return response.status(401).json({ message: 'Invalid e-mail' });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return response.status(401).send('Invalid password');
+            // Asegúrate de que la respuesta sea JSON
+            return response.status(401).json({ message: 'Invalid password' });
         }
-        const secret = process.env.JWT_SECRET + user.id
+        const secret = process.env.JWT_SECRET + user.id;
         const token = jwt.sign({ id: user.id }, secret, { expiresIn: '1h' });
         response.cookie('token', token, { httpOnly: true, path: '/' });
         response.status(201).json({ token });
     } catch (error) {
         console.log('Error al iniciar sesion:', error);
+        // Asegúrate de que la respuesta sea JSON en caso de error
+        response.status(500).json({ message: 'Error al iniciar sesión' });
     }
-});
+})
 
 // router.post('/login', async (request, response) => {
 //     const { username, password } = request.body;

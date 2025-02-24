@@ -10,7 +10,7 @@ const Login = () => {
 
     const loginFunction = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await fetch('http://localhost:5556/auth/login', {
                 method: 'POST',
@@ -19,13 +19,20 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password })
             });
-
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(errorData.message); // Muestra el mensaje de error del servidor
+                return;
+            }
+    
             const data = await response.json();
-            alert(data.message);
+            alert('Login exitoso!');
+            console.log(data.token);
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    };
     
 
     return (
