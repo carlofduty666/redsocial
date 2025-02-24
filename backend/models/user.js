@@ -1,4 +1,5 @@
 'use strict';
+const bcrypt = require('bcrypt');
 const {
   Model
 } = require('sequelize');
@@ -46,16 +47,19 @@ module.exports = (sequelize, DataTypes) => {
       return null;
     }
 
-    static async registerUser(username, hash) {
+    static async registerUser(userData) {
+      const hash = await bcrypt.hash(userData.password, 10);
       return await User.create({
-        username,
-        password: hash
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: hash,
       });
       }
 
-      static async loginUser(username) {
+      static async loginUser(email) {
         return await User.findOne({
-          where: { username }
+          where: { email }
         });
       }
 
@@ -105,8 +109,22 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'user'
     }
 }, {
-    sequelize,
-    modelName: 'User',
+  sequelize,
+  modelName: 'User',
+  // hooks: {
+  //   beforeCreate: async (user, options) => {
+  //     if (user.password) {
+  //       const hash = await bcrypt.hash(user.password, 10);
+  //       user.password = hash;
+  //     }
+  //   },
+  //   beforeUpdate: async (user, options) => {
+  //     if (user.password) {
+  //       const hash = await bcrypt.hash(user.password, 10);
+  //       user.password = hash;
+  //     }
+  //   }
+  // }
 });
   return User;
 };

@@ -11,19 +11,20 @@ const Login = () => {
     const loginFunction = async (e) => {
         e.preventDefault();
 
-        console.log(email, password)
-        fetch('http://localhost:5556/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({email, password})
-        }) 
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message)
-        })
-        .catch(error => console.error('Error:', error));
+        try {
+            const response = await fetch('http://localhost:5556/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
     
 
@@ -41,6 +42,7 @@ const Login = () => {
 
                     <form action="" onSubmit={loginFunction}>
                         <div className="mb-3">
+        
                             <Input
                                 type="email"
                                 id="email"
@@ -50,7 +52,6 @@ const Login = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label"></label>
                             <Input 
                                 type='password'
                                 id='password'

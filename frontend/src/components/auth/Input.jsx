@@ -81,20 +81,28 @@ const Input = ({
     onChange,
 }) => {
 
-    return (
-        <>
-            {placeholder && (
+
+    const emailLabel = (placeholder, id) => {
+        if (placeholder === 'name@example.com') {
+            return 'Email';
+        } else {
+            return (
                 <label htmlFor={id} className="form-label">
                     {placeholder}
                 </label>
-            )}
+            );
+        }
+    };
+
+    return (
+        <>
+            {placeholder && emailLabel(placeholder, id)}
             <input
                 type={type}
                 id={id}
                 className={`form-control ${type === 'password' ? 'bg-dark text-white' : ''} ${className}`}
                 placeholder={placeholder}
                 onChange={onChange}
-
             />
         </>
     );
