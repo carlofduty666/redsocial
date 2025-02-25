@@ -48,20 +48,20 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async registerUser(userData) {
+      // Aseguramos que el hash se genere con la misma configuración
       const hash = await bcrypt.hash(userData.password, 10);
-      return await User.create({
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        password: hash,
+      const user = await User.create({
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          password: hash
       });
-      }
+      return user;
+  }
 
-      static async loginUser(email) {
-        return await User.findOne({
-          where: { email }
-        });
-      }
+  static async loginUser(email) {
+    return await User.findOne({ where: { email } });
+}
 
       static async setResetToken(email, token, expiry) {
         return await User.update(
@@ -110,21 +110,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 }, {
   sequelize,
-  modelName: 'User',
-  // hooks: {
-  //   beforeCreate: async (user, options) => {
-  //     if (user.password) {
-  //       const hash = await bcrypt.hash(user.password, 10);
-  //       user.password = hash;
-  //     }
-  //   },
-  //   beforeUpdate: async (user, options) => {
-  //     if (user.password) {
-  //       const hash = await bcrypt.hash(user.password, 10);
-  //       user.password = hash;
-  //     }
-  //   }
-  // }
+  modelName: 'User'
 });
   return User;
 };

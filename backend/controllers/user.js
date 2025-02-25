@@ -57,18 +57,50 @@ router.delete('/', authenticateToken, async (request, response) => {
     }
 });
 
+// router.post('/register', async (request, response) => {
+//     try {
+        
+//         const { firstName, lastName, email, password } = request.body;
+
+//         const hash = await bcrypt.hash(password, 10);
+        
+//         await User.registerUser({firstName, lastName, email, password: hash});
+//         return response.status(201).json({ message: 'User created successfully :-)' });
+//     } catch (error) {
+//         console.log('Error al registrar usuario:', error);
+//         return response.status(500).json('Error al registrar usuario');
+//     }
+// });
+
 router.post('/register', async (request, response) => {
     try {
-        
         const { firstName, lastName, email, password } = request.body;
+        
+        // Verificamos que todos los campos necesarios estén presentes
+        if (!firstName || !lastName || !email || !password) {
+            return response.status(400).json({ message: 'Todos los campos son requeridos' });
+        }
+
+        // Verificamos si el usuario ya existe
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return response.status(400).json({ message: 'El email ya está registrado' });
+        }
 
         const hash = await bcrypt.hash(password, 10);
+        const newUser = await User.registerUser({firstName, lastName, email, password: hash});
         
-        await User.registerUser({firstName, lastName, email, password: hash});
-        return response.status(201).json({ message: 'User created successfully :-)' });
+        return response.status(201).json({ 
+            message: 'Usuario creado exitosamente',
+            user: {
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                email: newUser.email
+            }
+        });
     } catch (error) {
-        console.log('Error al registrar usuario:', error);
-        return response.status(500).send('Error al registrar usuario');
+        console.log('Error detallado:', error.message);
+        return response.status(500).json({ message: 'Error al registrar usuario', error: error.message });
     }
 });
 
@@ -76,26 +108,45 @@ router.post('/login', async (request, response) => {
     const { email, password } = request.body;
 
     try {
-        const user = await User.loginUser(email);
+        // Primero buscamos directamente con findOne
+        const user = await User.findOne({ 
+            where: { email: email } 
+        });
+
         if (!user) {
-            // Asegúrate de que la respuesta sea JSON
-            return response.status(401).json({ message: 'Invalid e-mail' });
+            return response.status(401).json({ message: 'Usuario no encontrado' });
         }
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            // Asegúrate de que la respuesta sea JSON
-            return response.status(401).json({ message: 'Invalid password' });
+
+        // Comparamos la contraseña
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
+            return response.status(401).json({ message: 'Contraseña incorrecta' });
         }
-        const secret = process.env.JWT_SECRET + user.id;
-        const token = jwt.sign({ id: user.id }, secret, { expiresIn: '1h' });
-        response.cookie('token', token, { httpOnly: true, path: '/' });
-        response.status(201).json({ token });
+
+        // Si todo está bien, generamos el token
+        const token = jwt.sign(
+            { id: user.id },
+            process.env.JWT_SECRET
+        );
+
+        // Enviamos la respuesta exitosa
+        return response.status(200).json({
+            success: true,
+            token: token,
+            user: {
+                email: user.email,
+                name: user.firstName
+            }
+        });
+
     } catch (error) {
-        console.log('Error al iniciar sesion:', error);
-        // Asegúrate de que la respuesta sea JSON en caso de error
-        response.status(500).json({ message: 'Error al iniciar sesión' });
+        console.log(error);
+        return response.status(500).json({ message: 'Error del servidor' });
     }
-})
+});
+
+
 
 // router.post('/login', async (request, response) => {
 //     const { username, password } = request.body;

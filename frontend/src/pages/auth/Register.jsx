@@ -26,6 +26,12 @@ const Register = () => {
 
             const data = await response.json();
             alert(data.message);
+            setName('');
+            setLastName('');
+            setEmail('');
+            setPassword('');
+            console.log(data);
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -45,6 +51,7 @@ const Register = () => {
                                     id="firstName" 
                                     className="form-control"
                                     placeholder="Name"
+                                    value={firstName}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
@@ -54,6 +61,7 @@ const Register = () => {
                                     id="lastName" 
                                     className="form-control"
                                     placeholder="Last name"
+                                    value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
                                 />
                             </div>
@@ -63,6 +71,7 @@ const Register = () => {
                                     id="email"
                                     className="form-control"
                                     placeholder="name@example.com"
+                                    value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
@@ -72,6 +81,7 @@ const Register = () => {
                                     id="password"
                                     className="bg-dark text-white"
                                     placeholder="Password"
+                                    value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>

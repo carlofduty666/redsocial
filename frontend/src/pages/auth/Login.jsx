@@ -10,29 +10,33 @@ const Login = () => {
 
     const loginFunction = async (e) => {
         e.preventDefault();
-    
+        
         try {
             const response = await fetch('http://localhost:5556/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password })
+                credentials: 'include',
+                body: JSON.stringify({ 
+                    email, 
+                    password 
+                })
             });
     
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(errorData.message); // Muestra el mensaje de error del servidor
-                return;
-            }
-    
             const data = await response.json();
-            alert('Login exitoso!');
-            console.log(data.token);
+            
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                window.location.href = '/dashboard';
+            } else {
+                alert(data.message);
+            }
         } catch (error) {
             console.error('Error:', error);
         }
     };
+    
     
 
     return (
@@ -54,7 +58,7 @@ const Login = () => {
                                 type="email"
                                 id="email"
                                 placeholder="Email"
-                                change={(e) => {setEmail(e.target.value)}}
+                                onChange={(e) => {setEmail(e.target.value)}}
                             
                             />
                         </div>
