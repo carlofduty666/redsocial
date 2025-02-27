@@ -49,12 +49,26 @@ module.exports = (sequelize, DataTypes) => {
 
     static async registerUser(userData) {
       // Aseguramos que el hash se genere con la misma configuración
-      const hash = await bcrypt.hash(userData.password, 10);
+      // const hash = await bcrypt.hash(userData.password, 10);
+      // bcrypt.hash(userData.password, 10, async (error, hash) => {
+      //   if (error) {
+      //       console.log(error);
+      //       response.status(500).send('Error al cifrar contraseña')
+      //       return;
+      //   }
+        // User.registerUser(username, hash, (error, result) => {
+        //     if (error) {
+        //         console.log(error);
+        //         response.status(500).send('Error en la consulta')
+        //         return;
+        //     }
+        //     response.send({ mensaje: "Usuario regsitro. :)"})
+        // })
       const user = await User.create({
           firstName: userData.firstName,
           lastName: userData.lastName,
           email: userData.email,
-          password: hash
+          password: userData.password
       });
       return user;
   }

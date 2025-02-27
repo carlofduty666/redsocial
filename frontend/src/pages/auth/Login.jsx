@@ -17,7 +17,6 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ 
                     email, 
                     password 
@@ -27,7 +26,7 @@ const Login = () => {
             const data = await response.json();
             
             if (response.ok) {
-                localStorage.setItem('token', data.token);
+                // localStorage.setItem('token', data.token);
                 window.location.href = '/dashboard';
             } else {
                 alert(data.message);

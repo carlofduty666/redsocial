@@ -117,28 +117,46 @@ router.post('/login', async (request, response) => {
             return response.status(401).json({ message: 'Usuario no encontrado' });
         }
 
-        // Comparamos la contraseña
-        const validPassword = await bcrypt.compare(password, user.password);
+        // // Comparamos la contraseña
+        // const validPassword = await bcrypt.compare(password, user.password);
 
-        if (!validPassword) {
-            return response.status(401).json({ message: 'Contraseña incorrecta' });
-        }
+        // if (!validPassword) {
+        //     return response.status(401).json({ message: 'Contraseña incorrecta' });
+        // }
+
+        bcrypt.compare(password, user.password, (error, isMatch) => {
+            if (error) {
+                console.log(error);
+                response.status(500).send('Error al verificar contraseña')
+                return;
+            }
+            if (!isMatch) {
+                response.status(401).send('Contraseña incorrecto')
+                return;
+            }
+
+            // const token = jwt.sign({ id: user.id }, 'hola', { expiresIn: '1h'})
+            // console.log(token);
+            // response.cookie('token', token, {httpOnly: true, path: '/'})
+            // response.status(200).send({token})
+            
+            const token = jwt.sign(
+                { id: user.id },
+                process.env.JWT_SECRET
+            );
+    
+            // Enviamos la respuesta exitosa
+            return response.status(200).json({
+                success: true,
+                token: token,
+                user: {
+                    email: user.email,
+                    password: user.password
+                }
+            });
+        })
 
         // Si todo está bien, generamos el token
-        const token = jwt.sign(
-            { id: user.id },
-            process.env.JWT_SECRET
-        );
-
-        // Enviamos la respuesta exitosa
-        return response.status(200).json({
-            success: true,
-            token: token,
-            user: {
-                email: user.email,
-                name: user.firstName
-            }
-        });
 
     } catch (error) {
         console.log(error);
