@@ -1,5 +1,4 @@
 'use strict';
-const bcrypt = require('bcrypt');
 const {
   Model
 } = require('sequelize');
@@ -48,22 +47,6 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async registerUser(userData) {
-      // Aseguramos que el hash se genere con la misma configuración
-      // const hash = await bcrypt.hash(userData.password, 10);
-      // bcrypt.hash(userData.password, 10, async (error, hash) => {
-      //   if (error) {
-      //       console.log(error);
-      //       response.status(500).send('Error al cifrar contraseña')
-      //       return;
-      //   }
-        // User.registerUser(username, hash, (error, result) => {
-        //     if (error) {
-        //         console.log(error);
-        //         response.status(500).send('Error en la consulta')
-        //         return;
-        //     }
-        //     response.send({ mensaje: "Usuario regsitro. :)"})
-        // })
       const user = await User.create({
           firstName: userData.firstName,
           lastName: userData.lastName,
@@ -121,7 +104,15 @@ module.exports = (sequelize, DataTypes) => {
     role: {
         type: DataTypes.STRING,
         defaultValue: 'user'
-    }
+    },
+    bio: DataTypes.TEXT,
+    location: DataTypes.STRING,
+    age: DataTypes.INTEGER,
+    gender: DataTypes.STRING,
+    birthdate: DataTypes.DATE,
+    artStyle: DataTypes.STRING,
+    avatar: DataTypes.STRING
+
 }, {
   sequelize,
   modelName: 'User'

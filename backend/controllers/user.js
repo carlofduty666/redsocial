@@ -21,7 +21,7 @@ const sequelize = new Sequelize(
 // esta constante no puede ir antes de la constante sequelize
 const User = require('../models/user')(sequelize, DataTypes);
 
-router.get('/', authenticateToken, async (request, response) => {
+router.get('/users', async (request, response) => {
     try {
         const users = await User.findAll(); // se puede usar el metodo getAllUsers() o el predeterminado de Sequelize: findAll()
         response.status(200).json(users);
@@ -116,13 +116,6 @@ router.post('/login', async (request, response) => {
         if (!user) {
             return response.status(401).json({ message: 'Usuario no encontrado' });
         }
-
-        // // Comparamos la contraseña
-        // const validPassword = await bcrypt.compare(password, user.password);
-
-        // if (!validPassword) {
-        //     return response.status(401).json({ message: 'Contraseña incorrecta' });
-        // }
 
         bcrypt.compare(password, user.password, (error, isMatch) => {
             if (error) {

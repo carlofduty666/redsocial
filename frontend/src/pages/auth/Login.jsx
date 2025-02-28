@@ -27,7 +27,7 @@ const Login = () => {
             
             if (response.ok) {
                 // localStorage.setItem('token', data.token);
-                window.location.href = '/dashboard';
+                window.location.href = '/profile';
             } else {
                 alert(data.message);
             }

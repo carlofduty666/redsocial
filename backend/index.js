@@ -28,6 +28,7 @@ const host = process.env.HOST || 'localhost';
 const userController = require('./controllers/user');
 // app.use('/users', userController);
 app.use('/auth', userController);
+app.use('/', userController);
 
 
 // Middelewares
@@ -81,6 +82,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.json({ message: 'API funcionando correctamente' });
 });
+
+
+
 
 
 // Database initialization

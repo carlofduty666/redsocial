@@ -7,7 +7,7 @@ const Button = ({text, color}) => {
     return (
 
         <>
-            <button className={"btn btn-outline-"+color}>
+            <button className={`btn btn-outline-${color}`}>
                 {text ? text: "Button"}
             
             </button>
