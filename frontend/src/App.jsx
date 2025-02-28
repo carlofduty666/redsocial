@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
+import ProtectedRoute from './pages/auth/ProtectedRoute';
+import Profile from './pages/Profile'
 import EditProfile from './pages/dashboard'
 import Navbar from './components/Navbar'
 
@@ -21,7 +23,14 @@ function App() {
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/dashboard" element={<EditProfile />} />
-        <Route path="/profile" element={<h1>Profile</h1>} />
+        <Route 
+        path="/profile" 
+        element={
+            <ProtectedRoute>
+                <Profile />
+            </ProtectedRoute>
+        } 
+        />
         <Route path="/edit-profile" element={<h1>Edit-profile</h1>} />
 
       </Routes>

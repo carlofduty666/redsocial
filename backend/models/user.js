@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Post, { foreignKey: 'userID'})
     }
 
     static async getAllUsers() {
@@ -111,7 +112,8 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     birthdate: DataTypes.DATE,
     artStyle: DataTypes.STRING,
-    avatar: DataTypes.STRING
+    avatar: DataTypes.STRING,
+    coverPic: DataTypes.STRING,
 
 }, {
   sequelize,

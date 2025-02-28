@@ -31,6 +31,26 @@ router.get('/users', async (request, response) => {
     }
 });
 
+router.get('/users/profile', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id; // El ID del usuario viene del token JWT
+        const user = await User.findByPk(userId); // Busca al usuario en la base de datos
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Excluye propiedades sensibles como la contraseña
+        const { password, resetToken, resetTokenExpiry, ...userData } = user.toJSON();
+
+        res.status(200).json(userData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener el perfil del usuario' });
+    }
+});
+
+
 router.post('/', authenticateToken, async (request, response) => {
     const { username, password, email, firstName, lastName, phone, address } = request.body;
     try {

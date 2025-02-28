@@ -37,6 +37,10 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: true
     });
+    await queryInterface.addColumn('Users', 'coverPic', {
+      type: Sequelize.STRING,
+      allowNull: true
+    });
   },
 
   async down (queryInterface, Sequelize) {
@@ -52,5 +56,6 @@ module.exports = {
     await queryInterface.removeColumn('Users', 'gender');
     await queryInterface.removeColumn('Users', 'birthdate');
     await queryInterface.removeColumn('Users', 'artStyle');
+    await queryInterface.removeColumn('Users', 'coverPic');
   }
 };
