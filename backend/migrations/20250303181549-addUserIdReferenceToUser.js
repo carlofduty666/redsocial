@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('Posts', 'userID', {
+    await queryInterface.addColumn('Notifications', 'userID', {
       type: Sequelize.INTEGER,
       allowNull: true,
       references: {
@@ -18,6 +18,7 @@ module.exports = {
       },
       onDelete: 'SET NULL',
     })
+    await queryInterface.removeColumn('Notifications', 'user_id')
   },
 
   async down (queryInterface, Sequelize) {
@@ -27,5 +28,15 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
+    await queryInterface.removeColumn('Notifications', 'userID')
+    await queryInterface.addColumn('Notifications', 'user_id', {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      onDelete: 'SET NULL',
+    })
   }
 };
