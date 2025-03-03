@@ -25,30 +25,22 @@ const port = process.env.PORT || 5556;
 const host = process.env.HOST || 'localhost';
 
 // Controllers
-const userController = require('./controllers/user');
 // app.use('/users', userController);
+const userController = require('./controllers/user');
+const reactionController = require('./controllers/reactions');
+const commentController = require('./controllers/comments');
+const postController = require('./controllers/posts');
+const notificationController = require('./controllers/notifications');
+const messageController = require('./controllers/messages');
 app.use('/auth', userController);
 app.use('/', userController);
 
+app.use('/api', reactionController);
+app.use('/api', commentController);
+app.use('/api', postController);
+app.use('/api', notificationController);
+app.use('/api', messageController);
 
-// Middelewares
-// const authenticateToken = require('./middleware/auth');
-// const upload = require('./middleware/uploads');
-
-
-
-// 
-
-
-// Configuración de la carpeta de archivos estáticos
-// app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static(path.join(__dirname, 'uploads')));
-// app.set('view engine', 'ejs');
-
-// Rutas 'upload' de archivos
-// app.get('/', authenticateToken, (req, res) => {
-//     res.render('file')
-// });
 
 // app.post('file-upload', upload.single('file'), async (req, res) => {
 //     const { username, password, email, firstName, lastName, phone, address, rol } = request.body;

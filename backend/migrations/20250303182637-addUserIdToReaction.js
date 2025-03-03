@@ -17,7 +17,7 @@ module.exports = {
         key: 'id'
       },
       onDelete: 'SET NULL',
-    })
+  })
   },
 
   async down (queryInterface, Sequelize) {
